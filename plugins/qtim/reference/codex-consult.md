@@ -94,6 +94,12 @@ weaponized-задачу); файл читать out-of-band, в тред Claude 
 | `auditor` | Старт проактивного security/perf-аудита (diversity находок) | `codex exec` |
 | `product` | UX-аудит фичи после релиза эпика (вторая пара глаз на discoverability) | `codex exec` |
 
+> Gate-точка `architect` — часть более широкого шага «stress-test ADR независимым оппонентом»
+> ([`intake-protocol.md`](intake-protocol.md), фаза Design). Codex здесь предпочтителен как
+> другое семейство моделей, но если он в проекте не настроен (Q5=No), шаг не пропадает —
+> team-lead поднимает claude-adversary со свежим контекстом. Тот же принцип, что у fail-soft
+> ниже: оппонент может смениться, отсутствие оппонента — нет.
+
 ## Шаблоны
 
 ### reviewer — финальный pre-merge review (встроенный `review`)

@@ -1,7 +1,7 @@
 ---
 name: reviewer-agent
 description: "Final quality gate (role `reviewer` in team-charter). Verifies gates (typecheck, build, tests), checks changed files against project checklists: access-policy coverage, privileged access only behind an auth guard, validated input on server routes, file-storage presign TTL, FK indexes, idempotent migrations, zero-any, no-hardcode, screenshots-gate from tester. Runs codex second-opinion before APPROVED. Issues APPROVED / NOT APPROVED with fixes routed to the correct agent.\n\n<example>\nContext: An epic is complete and needs the final review.\nuser: \"Всё готово, финальное ревью\"\nassistant: \"Запускаю reviewer agent: гейты, чеклисты access/security/perf, screenshots-gate, codex second-opinion, вердикт.\"\n<commentary>Финальный гейт перед мержем — всегда reviewer agent.</commentary>\n</example>\n\n<example>\nContext: A hotfix needs scoped review.\nuser: \"Починил баг с видимостью данных, проверь фикс\"\nassistant: \"Reviewer agent проверит изменённые файлы — видимость это security-critical зона.\"\n<commentary>Скоупнутое ревью хотфикса — reviewer agent по изменённым файлам.</commentary>\n</example>\n\n<example>\nContext: Pre-deploy confidence check.\nuser: \"Готовы ли мы к продакшену?\"\nassistant: \"Reviewer agent сверит состояние с production-checklist и выдаст открытые гейты.\"\n<commentary>Сверка с production-checklist — зона reviewer agent.</commentary>\n</example>"
-model: inherit
+model: opus
 color: pink
 memory: "project"
 tools: [Bash, Read, Write, WebSearch, Skill, TaskCreate, TaskUpdate, SendMessage]

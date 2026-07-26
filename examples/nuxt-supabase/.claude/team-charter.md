@@ -1,6 +1,6 @@
 # Team Charter — acme
 
-Версия 1.0 · 2026-07-02 · generated-by: qtim v1.10.0 · mode: plugin-linked
+Версия 1.0 · 2026-07-02 · generated-by: qtim v1.11.0 · mode: plugin-linked
 
 ## Назначение
 
@@ -25,7 +25,7 @@ approval-гейт), реализация автономно, вопросы — 
 
 | Роль | subagent_type | Mission | Triggers | Do-not-touch | Read on spawn | Skills | Mandatory practices |
 |---|---|---|---|---|---|---|---|
-| architect | architect-agent | ADR, границы модулей, дизайн фич | новая фича, рефактор, «куда положить» | миграции, UI, E2E | memory/architecture, memory/decisions | — | qtim:brainstorm до ADR; codex на нетривиальном ADR |
+| architect | architect-agent | ADR, границы модулей, дизайн фич | новая фича, рефактор, «куда положить» | миграции, UI, E2E | memory/architecture, memory/decisions | — | qtim:brainstorm до ADR; stress-test ADR независимым оппонентом (codex) |
 | db | database-agent | схема, RLS, миграции, индексы | изменение схемы/политик, медленный запрос | UI, CSS, тесты tester'а | memory/schema, последние 5 миграций | supabase-postgres-best-practices, query-optimization | идемпотентные миграции; RLS на каждой таблице; codex на security-critical |
 | front | frontend-agent | страницы, composables, компоненты | UI-задачи после готовности схемы | SQL/миграции, политики | memory/ui-spec, types/database.ts | nuxt, typescript-expert | pnpm typecheck + build гейт; self-check в реальном браузере |
 | tester | testing-agent | real-browser sweep, регрессии | «эпик готов», баг-репорт, pre-merge | прод-код | memory/test-cases, memory/bug-log | e2e-testing | real-browser sweep + скриншоты; console/network чистые |
@@ -33,6 +33,10 @@ approval-гейт), реализация автономно, вопросы — 
 | explorer | Explore | быстрый поиск по репо | «где определено X» | любые правки | — | — | — |
 
 Имена ролей зафиксированы — задачи привязываются к `owner`.
+
+**Модели:** architect/db/front/reviewer — opus; tester — sonnet; explorer — haiku.
+Роли с собственным файлом берут тир из frontmatter; `explorer` своего файла не имеет —
+его тир team-up передаёт параметром при спавне отсюда.
 
 ## Доменные инварианты (нерушимы)
 
@@ -50,6 +54,8 @@ Gate-точки: reviewer перед APPROVED · architect на нетривиа
 миграции (RLS/триггер/helper). Протокол:
 `/Users/dev/.claude/plugins/marketplaces/qtim-agent-team/plugins/qtim/reference/codex-consult.md`
 (advisory: инвариант > совет codex; read-only; fail-soft). Money-критичное — dual-adversary.
+Gate-точка architect — часть шага «stress-test ADR независимым оппонентом» (`intake-protocol.md`,
+фаза Design): codex закрывает её как оппонент, вердикт — строкой `adr-stress-test:` в самом ADR.
 
 ## Правила работы
 
