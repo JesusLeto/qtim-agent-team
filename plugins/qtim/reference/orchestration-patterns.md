@@ -206,7 +206,7 @@ const map = await agent(
 helper-функции; платёжные пути; публичные контракты). Исполнитель пишет изменение → оба
 оппонента независимо ищут: обход правила доступа, гонку на конкурентном пути, утечку чужих
 данных, не-идемпотентность. Исполнитель **верифицирует каждый finding сам** (оппонент
-галлюцинирует file:line — правило из codex-consult).
+галлюцинирует file:line — правило из скила `qtim:codex-consult`).
 
 **Голосование:** оба подтвердили P0/P1 → блок до фикса. Расходятся → team-lead арбитр.
 **Инвариант важнее обоих оппонентов** (advisory, не authoritative).
@@ -222,17 +222,20 @@ const REVIEW_PROMPT = `Критическое ревью изменения на
   Изменение исполнителя (сверь с фактическим diff в репо):\n${m}`
 const [claudeReview, codexReview] = await parallel([
   () => agent(REVIEW_PROMPT, { schema: FINDINGS }),
-  () => agent(REVIEW_PROMPT, { agentType: 'codex:codex-rescue', schema: FINDINGS }), // плагин-форвардер к Codex
+  // codex-оппонент — raw CLI: песочница задаётся флагом, а не доверием к промпту
+  () => agent(`Прогони: codex exec -s read-only -o <файл> - < <промпт-файл>, верни findings из файла.
+${REVIEW_PROMPT}`, { schema: FINDINGS }),
 ])
 // db верифицирует оба; конфликт с доменным инвариантом → инвариант побеждает
 // codexReview === null (codex упал) → fail-soft: single-reviewer, запись «codex skipped»
 ```
 
 > **Статус codex:** перед skip **пробовать вызов** — не скипать по памяти о старой поломке
-> credentials. Канал — `agentType: 'codex:codex-rescue'` (плагин `codex@openai-codex`; в промпте
-> ЯВНО «read-only, код не правь», иначе форвардер даст Codex `--write`) или raw
-> `codex exec -s read-only` per `codex-consult.md`. Fail-soft остаётся: codex недоступен →
-> single-adversary (claude) + `codex-consult skipped: <reason>`.
+> credentials. Канал для оппонента — raw `codex exec -s read-only` по скилу `qtim:codex-consult`;
+> `agentType: 'codex:codex-rescue'` здесь **не используем**: у форвардера дефолт `--write`
+> (→ `workspace-write`), а `permissionMode` плагинному субагенту не навязать — read-only держался
+> бы только на фразе в промпте. Fail-soft остаётся: codex недоступен → single-adversary (claude)
+> + `codex-consult skipped: <reason>`.
 
 ---
 

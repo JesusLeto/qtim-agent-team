@@ -17,6 +17,7 @@ ALLOWED = {
     "BACKEND",
     "DATABASE",
     "FILE_STORAGE",
+    "DEV_CMD",
     "BUILD_CMD",
     "TYPECHECK_CMD",
     "TEST_RUNNER",

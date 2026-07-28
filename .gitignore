@@ -1,6 +1,8 @@
 .DS_Store
 node_modules/
 *.log
+.idea/
+.vscode/
 
 # Эталонные настройки golden-примера — часть репозитория (их проверяет CI),
 # отменяем типовое глобальное правило **/.claude/settings.local.json

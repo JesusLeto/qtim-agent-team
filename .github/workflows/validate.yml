@@ -10,12 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # check_migrations.py сравнивает с базой; обрезанная история его ломает
 
       - name: JSON-манифесты валидны
         run: |
           python3 -m json.tool .claude-plugin/marketplace.json > /dev/null
           python3 -m json.tool plugins/qtim/.claude-plugin/plugin.json > /dev/null
           python3 -m json.tool plugins/qtim/hooks/hooks.json > /dev/null
+          python3 -m json.tool examples/nuxt-supabase/.claude/settings.json > /dev/null
           python3 -m json.tool examples/nuxt-supabase/.claude/settings.local.json > /dev/null
 
       - name: Канон рантайма — call-синтаксис упразднённых примитивов запрещён (plugins/ + examples/)
@@ -26,8 +29,18 @@ jobs:
           fi
           echo 'OK: call-синтаксис упразднённых примитивов не встречается'
 
-      - name: Hook-скрипт синтаксически валиден (sh на Linux = dash)
-        run: sh -n plugins/qtim/hooks/session-start.sh
+      - name: Hook-скрипты синтаксически валидны (sh на Linux = dash)
+        run: |
+          found=0
+          for f in $(find plugins/qtim -name '*.sh' | sort); do
+            sh -n "$f" || exit 1
+            found=$((found + 1))
+          done
+          if [ "$found" -eq 0 ]; then
+            echo 'Не найдено ни одного .sh — проверка молча деградировала' >&2
+            exit 1
+          fi
+          echo "OK: $found hook-скрипт(ов) синтаксически валидны"
 
       - name: Плейсхолдеры шаблонов из белого списка
         run: python3 .github/scripts/check_placeholders.py
@@ -37,3 +50,17 @@ jobs:
 
       - name: Относительные ссылки в plugins/ не биты
         run: python3 .github/scripts/check_links.py
+
+      - name: Golden-эталон семантически валиден
+        run: python3 .github/scripts/check_golden.py
+
+      - name: Правка сгенерированного несёт запись в реестр миграций
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          base="$BASE_SHA"
+          # Первый push в ветку отдаёт нулевой sha в github.event.before — откатываемся на предыдущий коммит.
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            base=$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)
+          fi
+          CHECK_MIGRATIONS_BASE="$base" python3 .github/scripts/check_migrations.py

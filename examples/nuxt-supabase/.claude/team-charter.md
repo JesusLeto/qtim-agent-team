@@ -1,6 +1,6 @@
 # Team Charter — acme
 
-Версия 1.0 · 2026-07-02 · generated-by: qtim v1.11.0 · mode: plugin-linked
+Версия 1.0 · 2026-07-02 · generated-by: qtim v1.12.0 · mode: plugin-linked
 
 ## Назначение
 
@@ -51,15 +51,23 @@ approval-гейт), реализация автономно, вопросы — 
 ## Codex second-opinion
 
 Gate-точки: reviewer перед APPROVED · architect на нетривиальном ADR · db на security-critical
-миграции (RLS/триггер/helper). Протокол:
-`/Users/dev/.claude/plugins/marketplaces/qtim-agent-team/plugins/qtim/reference/codex-consult.md`
-(advisory: инвариант > совет codex; read-only; fail-soft). Money-критичное — dual-adversary.
+миграции (RLS/триггер/helper). Протокол — скил `qtim:codex-consult`, роль вызывает его через
+`Skill` в момент гейта (advisory: инвариант > совет codex; read-only; fail-soft).
+Money-критичное — второй независимый оппонент, поднимает team-lead.
 Gate-точка architect — часть шага «stress-test ADR независимым оппонентом» (`intake-protocol.md`,
 фаза Design): codex закрывает её как оппонент, вердикт — строкой `adr-stress-test:` в самом ADR.
 
 ## Правила работы
 
 - Коммуникация — `SendMessage`; задачи — `TaskCreate`/`TaskUpdate` с `owner`; общий список один.
+  Нет `Task*` у роли (ни в наборе, ни через `ToolSearch`) — состав задачи team-lead'у через
+  `SendMessage`, список ведёт он.
+- Инструменты поиска: `Grep`/`Glob` заявлены в `tools:` ролей; если рантайм их не выдал —
+  поиск и листинг каталогов через `Bash` (`rg`, `grep -rn`, `ls`).
+- Правила по путям: `.claude/rules/` — `migrations.md` (`supabase/migrations/**`),
+  `frontend.md` (pages/components/layouts/composables/middleware), `server-routes.md`
+  (`server/api/**`, `server/routes/**`). Рантайм подмешивает их тому, кто открыл совпавший файл
+  через `Read`; `cat` и `git diff` через `Bash` их не поднимают — файлы открывай чтением.
 - Universal skills (проверены на доступность): `using-superpowers`, `karpathy-guidelines`.
 - Канон рантайма (упразднённость `TeamCreate`/`team_name`) — см. `/qtim:team-up`, здесь не дублируется.
 - Anti-patterns: спавн дублей вместо `SendMessage`; отчёт процессом вместо результата;
