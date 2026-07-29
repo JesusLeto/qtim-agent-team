@@ -54,6 +54,9 @@ jobs:
       - name: Golden-эталон семантически валиден
         run: python3 .github/scripts/check_golden.py
 
+      - name: Ссылки на скилы резолвятся, имена совпадают с каталогами
+        run: python3 .github/scripts/check_skill_refs.py
+
       - name: Правка сгенерированного несёт запись в реестр миграций
         env:
           BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}

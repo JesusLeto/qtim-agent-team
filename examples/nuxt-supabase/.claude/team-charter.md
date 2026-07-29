@@ -1,6 +1,6 @@
 # Team Charter — acme
 
-Версия 1.0 · 2026-07-02 · generated-by: qtim v1.12.0 · mode: plugin-linked
+Версия 1.0 · 2026-07-02 · generated-by: qtim v1.13.0 · mode: plugin-linked
 
 ## Назначение
 
@@ -25,11 +25,11 @@ approval-гейт), реализация автономно, вопросы — 
 
 | Роль | subagent_type | Mission | Triggers | Do-not-touch | Read on spawn | Skills | Mandatory practices |
 |---|---|---|---|---|---|---|---|
-| architect | architect-agent | ADR, границы модулей, дизайн фич | новая фича, рефактор, «куда положить» | миграции, UI, E2E | memory/architecture, memory/decisions | — | qtim:brainstorm до ADR; stress-test ADR независимым оппонентом (codex) |
-| db | database-agent | схема, RLS, миграции, индексы | изменение схемы/политик, медленный запрос | UI, CSS, тесты tester'а | memory/schema, последние 5 миграций | supabase-postgres-best-practices, query-optimization | идемпотентные миграции; RLS на каждой таблице; codex на security-critical |
-| front | frontend-agent | страницы, composables, компоненты | UI-задачи после готовности схемы | SQL/миграции, политики | memory/ui-spec, types/database.ts | nuxt, typescript-expert | pnpm typecheck + build гейт; self-check в реальном браузере |
-| tester | testing-agent | real-browser sweep, регрессии | «эпик готов», баг-репорт, pre-merge | прод-код | memory/test-cases, memory/bug-log | e2e-testing | real-browser sweep + скриншоты; console/network чистые |
-| reviewer | reviewer-agent | финальный гейт APPROVED/NOT APPROVED | завершение эпика, hotfix-review | правки кода | memory/review-report, memory/production-checklist | security-hardening | гейты typecheck/build/tests; codex перед APPROVED |
+| architect | architect-agent | ADR, границы модулей, дизайн фич | новая фича, рефактор, «куда положить» | миграции, UI, E2E | memory/architecture, memory/decisions | — | qtim:brainstorm до ADR; объём варианта — лестница qtim:minimal-diff; stress-test ADR независимым оппонентом (codex) |
+| db | database-agent | схема, RLS, миграции, индексы | изменение схемы/политик, медленный запрос | UI, CSS, тесты tester'а | memory/schema, последние 5 миграций | supabase-postgres-best-practices, query-optimization | идемпотентные миграции; RLS на каждой таблице; объём решения по qtim:minimal-diff (правило — в constraint/индекс); qtim:debug-loop на нетривиальных багах; codex на security-critical |
+| front | frontend-agent | страницы, composables, компоненты | UI-задачи после готовности схемы | SQL/миграции, политики | memory/ui-spec, types/database.ts | nuxt, typescript-expert | pnpm typecheck + build гейт; объём решения по qtim:minimal-diff; qtim:debug-loop на нетривиальных багах; self-check в реальном браузере |
+| tester | testing-agent | real-browser sweep, регрессии | «эпик готов», баг-репорт, pre-merge | прод-код | memory/test-cases, memory/bug-log | e2e-testing | real-browser sweep + скриншоты; console/network чистые; qtim:debug-loop на плавающих багах |
+| reviewer | reviewer-agent | финальный гейт APPROVED/NOT APPROVED | завершение эпика, hotfix-review | правки кода | memory/review-report, memory/production-checklist | security-hardening | гейты typecheck/build/tests; ревью объёма (qtim:minimal-diff) в рекомендации; codex перед APPROVED |
 | explorer | Explore | быстрый поиск по репо | «где определено X» | любые правки | — | — | — |
 
 Имена ролей зафиксированы — задачи привязываются к `owner`.

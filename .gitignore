@@ -3,6 +3,7 @@ node_modules/
 *.log
 .idea/
 .vscode/
+__pycache__/
 
 # Эталонные настройки golden-примера — часть репозитория (их проверяет CI),
 # отменяем типовое глобальное правило **/.claude/settings.local.json
