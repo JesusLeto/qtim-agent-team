@@ -55,7 +55,7 @@ const perLens = await pipeline(
     `Ревью изменений (${SCOPE}) строго через одну линзу: ${lens}.
      Сверься с доменными инвариантами проекта (.claude/team-charter.md + memory/). Read-only,
      код не правь. Только реальные дефекты с file:line — не стилистика и не пожелания.`,
-    { label: `линза: ${lens.slice(0, 40)}`, phase: 'Линзы', agentType: REVIEWER, schema: FINDINGS }),
+    { label: `линза: ${lens.slice(0, 40)}`, phase: 'Линзы', agentType: REVIEWER, schema: FINDINGS, model: 'opus' }),
   (r, lens) => {
     if (!r) {
       log(`Линза «${lens.slice(0, 40)}» упала — измерение НЕ проверено, вердикт будет NOT APPROVED`)
@@ -70,7 +70,7 @@ const perLens = await pipeline(
       agent(
         `Попробуй ОПРОВЕРГНУТЬ finding: «${f.summary}» (${f.file}:${f.line ?? '?'}).
          Открой код и проверь фактически. Не смог подтвердить по коду → real=false.`,
-        { label: `verify: ${f.file}`, phase: 'Верификация', schema: VERDICT })
+        { label: `verify: ${f.file}`, phase: 'Верификация', schema: VERDICT, model: 'opus' })
         .then(v => v
           ? { ...f, real: !!v.real, verifyReason: v.reason }
           : { ...f, real: true, unverified: true, verifyReason: 'скептик недоступен — finding НЕ опровергнут, требует ручной проверки' })))
@@ -90,7 +90,7 @@ const verdict = await agent(
    запись), группировка по severity, маршрутизация (db / front / tester / devops / архитектура),
    итог approved=false при любом P0/P1. Подтверждённые скептиками findings:\n${JSON.stringify(confirmed)}
    Неверифицированные findings (сбой скептика или сверх лимита — НЕ опровергнуты, выдели их в отчёте отдельным блоком «требуют ручной проверки»):\n${JSON.stringify(unverified)}${failedLenses.length ? `\n   Линзы, упавшие целиком (эти измерения не проверялись — отчёт неполон, отрази это): ${JSON.stringify(failedLenses)}` : ''}`,
-  { phase: 'Синтез', schema: REPORT })
+  { phase: 'Синтез', schema: REPORT, model: 'opus' })
 
 // Детерминированный гейт: сбой инфраструктуры и неопровергнутый P0/P1 блокируют независимо от мнения синтезатора.
 const blocking = f => f.severity === 'P0' || f.severity === 'P1'

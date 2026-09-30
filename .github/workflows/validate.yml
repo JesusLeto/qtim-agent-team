@@ -42,6 +42,32 @@ jobs:
           fi
           echo "OK: $found hook-скрипт(ов) синтаксически валидны"
 
+      - name: Python-скрипты плагина парсятся как Python 3.9 (ноль файлов = fail)
+        run: |
+          # Нижняя граница — системный python3 macOS (3.9.6): скрипты плагина ставятся в чужие проекты.
+          # ast ловит синтаксис новее 3.9 (match, скобочные with), но не рантайм-API (int.bit_count) и не
+          # `int | None` в аннотациях — их закрывает обязательный `from __future__ import annotations`.
+          found=0
+          for f in $(find plugins/qtim -name '*.py' | sort); do
+            python3 -c 'import ast, sys; p = sys.argv[1]; ast.parse(open(p, encoding="utf-8").read(), p, feature_version=(3, 9))' "$f" || {
+              echo "$f: не парсится как Python 3.9 — скрипты плагина обязаны работать на python3 >= 3.9 без зависимостей; перепиши конструкцию" >&2
+              exit 1
+            }
+            grep -q '^from __future__ import annotations' "$f" || {
+              echo "$f: нет 'from __future__ import annotations' — добавь первой инструкцией после docstring" >&2
+              exit 1
+            }
+            found=$((found + 1))
+          done
+          if [ "$found" -eq 0 ]; then
+            echo 'Не найдено ни одного .py в plugins/qtim — ожидался skills/kb-format/scripts/kb_scan.py; проверка молча деградировала бы' >&2
+            exit 1
+          fi
+          echo "OK: $found python-скрипт(ов) плагина парсятся как Python 3.9"
+
+      - name: kb_scan.py selftest — ломающие входы ловятся
+        run: python3 plugins/qtim/skills/kb-format/scripts/kb_scan.py selftest
+
       - name: Плейсхолдеры шаблонов из белого списка
         run: python3 .github/scripts/check_placeholders.py
 

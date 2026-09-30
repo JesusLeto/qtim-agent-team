@@ -372,3 +372,16 @@
   (`qtim:minimal-diff` → `minimal-diff`) в файлах ролей `.claude/agents/*` и charter.
 - Без миграции роли работают по-прежнему: скил доступен в сессии, но ни одна роль его
   не вызывает — ссылок на него в сгенерированных файлах нет.
+
+## → 1.15.0
+
+- **Plugin-linked** — ничего: правка движка (команда `/qtim:kb-refresh`, скил `qtim:kb-format`,
+  жизненный цикл фичи, писатели памяти). SessionStart подскажет sync из-за смены версии — он
+  только обновит штамп.
+- **Standalone** — докопируй `commands/kb-refresh.md`, `skills/kb-format/` целиком со
+  `scripts/` и `workflows/kb-refresh.mjs`; локализуй в скопированных файлах
+  `qtim:kb-format` → `kb-format`, `/qtim:kb-refresh` → `/kb-refresh` и пути
+  `${CLAUDE_PLUGIN_ROOT}/skills/` → `.claude/skills/`. Скрипту скила нужен python3 ≥ 3.9 —
+  скажи об этом пользователю.
+- **Charter, сводка «PM-конвейер»** — не трогай: статус `Archived` и `.work/` в неё не
+  переносятся, при расхождении верен reference.

@@ -5,6 +5,10 @@ node_modules/
 .vscode/
 __pycache__/
 
+# Сессия команды, стартовавшая из plugins/qtim, кладёт project-scope память ролей в plugins/qtim/.claude/ —
+# в дереве плагина ей делать нечего: уедет пользователям и попадёт под сканы CI по plugins/**
+plugins/qtim/.claude/
+
 # Эталонные настройки golden-примера — часть репозитория (их проверяет CI),
 # отменяем типовое глобальное правило **/.claude/settings.local.json
 !examples/*/.claude/settings.local.json

@@ -53,14 +53,17 @@
 - **Мутации в параллель → `isolation: 'worktree'`** (несколько агентов правят файлы). Для
   read-only оппонентов/судей не нужно.
 
-**Named workflows:** плагин поставляет три готовых параметризованных скрипта в каталоге
+**Named workflows:** плагин поставляет четыре готовых параметризованных скрипта в каталоге
 `workflows/` плагина:
 - `ensemble-review.mjs` — мульти-линзовый pre-merge review + скептик-верификация каждого
   finding + синтез-вердикт; для money/security-critical эпиков — перед APPROVED;
 - `access-audit.mjs` — fan-out аудита модели доступа по сущностям → карта видимости + щели
   на стыках (args.entities обязателен);
 - `flaky-hunt.mjs` — loop-until-trace: гонять сценарий, пока flaky-fail не пойман (args.scenario
-  обязателен; бюджет-guard и maxRuns встроены).
+  обязателен; бюджет-guard и maxRuns встроены);
+- `kb-refresh.mjs` — глубина full актуализации памяти: писатель на устаревший файл →
+  верификатор на пачку файлов → FIX, жёсткий потолок агентов. Запускается только из
+  [`/qtim:kb-refresh`](../commands/kb-refresh.md); opt-in — ответ «да» на вопрос старта.
 
 Запуск — по пути из каталога плагина: `Workflow({ scriptPath: '<каталог плагина qtim>/workflows/ensemble-review.mjs', args: {...} })`.
 В standalone-проектах setup копирует их в `.claude/workflows/`, где они доступны и как

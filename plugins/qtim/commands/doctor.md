@@ -40,7 +40,16 @@ description: Диагностика окружения и собранной к�
    созданы, но не вписаны в `read on spawn` роли `product` → warn, допиши (иначе роль слепа
    к готовой памяти); не созданы вовсе → **info, не fail** (канон «если созданы», движок
    backward-tolerant) — на существующей кодовой базе порекомендуй `/qtim:product-onboard`,
-   для greenfield не нужен.
+   для greenfield не нужен. **Свежесть и формат памяти:** `python3 <kb_scan> all --base <база>
+   --json` — путь к скрипту как в [`/qtim:kb-refresh`](kb-refresh.md), шаг 0; `prepare` не
+   зови (doctor не трогает сеть и лок): база — `base:` из frontmatter `memory/MEMORY.md`, иначе
+   `origin/HEAD`, иначе только `validate` без `--base`. Устаревшие файлы (`delta.files[].stale`),
+   превышенные бюджеты (`validate.budgets`), фичи в `Done` со служебным
+   (`features.items[].service`), битые ссылки индекса (`validate.problems`) → **warn** с фиксом
+   `/qtim:kb-refresh`. Мёртвые контракты (`validate.consumers.dead`) → **warn** с фиксом «поправь
+   read-on-spawn в charter и `.claude/agents/*`» — kb-refresh их только передаёт в отчёт; с
+   `expected_absent: true` (файл помечен «создаётся») — **info**. Нет python3 ≥ 3.9 или
+   скрипта → **info** «проверки свежести памяти недоступны», не fail.
 7. **Codex** (если включён в charter). Скил протокола доступен в сессии (`qtim:codex-consult`,
    в standalone — `codex-consult`); `codex --version` отрабатывает; плагин codex установлен
    или доступен raw-канал `codex exec` (для gate-точек ролей плагин не обязателен).

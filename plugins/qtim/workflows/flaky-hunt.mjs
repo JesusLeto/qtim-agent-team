@@ -36,7 +36,7 @@ while (!trace && i < MAX_RUNS && budget.remaining() > MIN_BUDGET) {
      Лови flaky-fail / гонку. При fail сохрани артефакты (trace, скриншот, console+network лог)
      в каталог скриншотов/логов проекта (memory/screenshots/ или принятый в проекте) и верни
      failed=true + tracePath. Зелёный прогон — failed=false. Код не правь.`,
-    { label: `run #${i}`, phase: 'Прогоны', agentType: TESTER, schema: RUN })
+    { label: `run #${i}`, phase: 'Прогоны', agentType: TESTER, schema: RUN, model: 'sonnet' })
   if (r === null) {
     errors += 1
     log(`#${i}: сбой прогона (агент не вернул результат) — НЕ зелёный, сценарий не проверялся`)

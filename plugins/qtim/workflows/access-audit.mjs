@@ -44,7 +44,7 @@ const found = (await parallel(args.entities.map(e => () =>
      в обход канона); утечка чужих данных; обходные пути (серверные routes мимо политики,
      привилегированный клиент без гарда). ${FOCUS}
      Сверься с memory/ + .claude/team-charter.md. Read-only. Findings с file:line.`,
-    { label: `audit: ${e}`, phase: 'Аудит', schema: ACCESS_FINDINGS })))).filter(Boolean)
+    { label: `audit: ${e}`, phase: 'Аудит', schema: ACCESS_FINDINGS, model: 'opus' })))).filter(Boolean)
 
 log(`Аудит завершён: ${found.length}/${args.entities.length} сущностей, ${found.reduce((n, r) => n + r.findings.length, 0)} находок`)
 
@@ -52,6 +52,6 @@ const map = await agent(
   `Собери из находок ниже карту видимости по ролям/акторам и перечисли щели на стыках
    (дочерние сущности, наследующие scope; пересечения политик; обходные пути).
    Находки:\n${JSON.stringify(found)}`,
-  { phase: 'Синтез', schema: VISIBILITY_MAP })
+  { phase: 'Синтез', schema: VISIBILITY_MAP, model: 'opus' })
 
 return { map: map && map.map, gaps: (map && map.gaps) || [], raw: found }
