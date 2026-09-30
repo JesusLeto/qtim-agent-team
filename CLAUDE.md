@@ -72,7 +72,7 @@ CI (`.github/workflows/validate.yml`) на каждый push/PR: валидно�
 - Валидность JSON: `python3 -m json.tool .claude-plugin/marketplace.json plugins/qtim/.claude-plugin/plugin.json plugins/qtim/hooks/hooks.json`.
 - Канон рантайма: `grep -rn "TeamCreate\|TeamDelete\|team_name" plugins/ examples/` — вхождения только в контексте «упразднено».
 - Кросс-ссылки между `commands/` и `reference/` не битые.
-- Ручная проверка установки: `/plugin marketplace add toiiia/qtim-agent-team` → `/plugin install qtim@qtim-agent-team`; рантайму нужен флаг `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` в `settings.json`.
+- Ручная проверка установки: `/plugin marketplace add JesusLeto/qtim-agent-team` → `/plugin install qtim@qtim-agent-team`; рантайму нужен флаг `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` в `settings.json`.
 
 ## Чеклист при обновлении Claude Code
 
@@ -83,3 +83,18 @@ CI (`.github/workflows/validate.yml`) на каждый push/PR: валидно�
 - поле `memory` frontmatter агентов и путь agent-memory (`user` → `~/.claude/agent-memory/<agentType>/`, `project` → `.claude/agent-memory/<agentType>/`, `local` → `.claude/agent-memory-local/<agentType>/`). **Рантайм при этом сам инжектит в промпт роли блок агентской памяти** — типы записей, формат файлов, `MEMORY.md` как индекс, лимит на него: шаблоны `templates/roles/` не должны его дублировать и тем более противоречить ему (прецедент 1.12.0 — свой блок диктовал другой формат и несуществующие лимиты). Проверять эмпирически: спавн роли + просьба процитировать эту часть системного промпта;
 - канон «Модели оркестрации» в `commands/team-up.md` — не изменились ли примитивы рантайма;
 - при смене поколения моделей — перечитай шаблоны `templates/roles/` с вопросом «какие инструкции компенсируют слабости прошлых моделей» (пошаговые рецепты, разжёванные детали): компенсирующий скаффолдинг выпиливай, инварианты оставляй; `model:` в шаблонах — **явный тир алиасом** (`opus` интеллект-ёмким ролям, `sonnet`/`haiku` механическим), не `inherit` (привязал бы роль к модели сессии team-lead'а) и не ID поколения (`claude-opus-5`) — алиас едет на актуальную модель тира сам. При появлении модели вне тир-неймспейса раскладку пересматривать руками.
+
+## Команда агентов
+
+Контракт команды импортирован строкой ниже — так он приезжает каждой роли в стартовом
+контексте, а не остаётся указателем, по которому роль может не сходить.
+
+@.claude/team-charter.md
+
+- `/qtim:team-up` — поднять команду под эпик, `/qtim:team-lazy` — роли по требованию,
+  `/qtim:team-down` — свернуть. Состав: `architect` · `prompt` · `ci` · `reviewer` · `explorer`.
+- `/qtim:team-sync` — после обновления плагина qtim (SessionStart-hook подскажет при дрейфе).
+- `/qtim:doctor` — если что-то не работает.
+
+Локальный прогон CI-гейтов — `memory/commands.md`. Доменные требования, привязанные к путям,
+лежат в `.claude/rules/` и подмешиваются рантаймом тому, кто открыл совпавший файл через `Read`.

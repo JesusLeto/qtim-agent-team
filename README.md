@@ -38,7 +38,7 @@
 ## Установка
 
 ```bash
-/plugin marketplace add toiiia/qtim-agent-team
+/plugin marketplace add JesusLeto/qtim-agent-team
 /plugin install qtim@qtim-agent-team
 ```
 
