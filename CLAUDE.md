@@ -41,7 +41,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Три ортогональные оси — каждая описана ровно в одном файле
 
 - «**Сколько** оркестрации» — Decision Matrix A/B/C/D по глубине координации (наличие петель impl↔test↔review) — `commands/team-up.md`.
-- «**Риск/обратимость** → дизайн-фаза + approval-гейт» — `reference/intake-protocol.md` (тест «развилка?»).
+- «**Риск/обратимость** → дизайн-фаза + approval-гейт + бюджет проверки на реализации» — `reference/intake-protocol.md` (тест «развилка?», стоп-условия автопилота, старшинство указаний).
 - «**Какая форма**» — 6 паттернов на движке Workflow (opt-in пользователя обязателен) — `reference/orchestration-patterns.md`.
 
 Не дублируй логику одной оси в файле другой — файлы ссылаются друг на друга относительными ссылками (`../commands/…`, `../reference/…`), они должны оставаться валидными.

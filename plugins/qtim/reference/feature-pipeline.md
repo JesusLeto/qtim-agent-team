@@ -35,12 +35,12 @@ dev-ролей по реальному коду, а не на предполож
 | `prd.md` | PRD: цели, сценарии, acceptance criteria |
 | `decomposition.md` | work items с привязкой к слоям и файлам |
 | `estimate.md` | сводка оценок S/M/L/XL по work items |
-| `plan.md` | фазы реализации (ранние — с наибольшей неопределённостью), gates, handoff |
-| `feature-brief.md` | fast-path: PRD-lite + work items с evidence + план одной фазы + handoff (заменяет prd/decomposition/estimate/plan) |
+| `plan.md` | фазы реализации (ранние — с наибольшей неопределённостью), gates, ограничения пользователя, handoff |
+| `feature-brief.md` | fast-path: PRD-lite + work items с evidence + план одной фазы + ограничения пользователя + handoff (заменяет prd/decomposition/estimate/plan) |
 
 Шапка каждого файла: `Feature / Slug / Status: Draft | Approved | In Development | Done / Дата`;
-в конце — секция «История изменений» (append-only, строка на ревизию или зафиксированное
-в реализации отклонение).
+в конце — секция «История изменений» (append-only, строка на ревизию, зафиксированное
+в реализации отклонение, принятый риск или находку вне объёма).
 
 **Семантика статусов** (переходы исполняют разные стороны — это контракт между треками):
 
